@@ -28,14 +28,14 @@ public class FileReader {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd, HH-mm-ss");
 
 
-        try (Stream<Path> files = Files.list(Path.of(directory))) {
+        try (Stream<Path> files = Files.list(Path.of(directory))) { // get list of files in directory
             files.filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".txt"))
+                    .filter(path -> path.toString().endsWith(".txt")) // filter only /.txt files
                     .forEach(path -> {
                         try {
 
-                            String contents = Files.readString(path).strip();
-                            String date = LocalDateTime.now().format(formatter);
+                            String contents = Files.readString(path).strip(); // read contents of each file
+                            String date = LocalDateTime.now().format(formatter); // get current date and time
 
                             Bodies body = new Bodies(
                                     index.get(), // id
@@ -47,17 +47,17 @@ public class FileReader {
                                     sha256(path) // get files hash
                             );
 
-                            Content content = new Content(
+                            Content content = new Content( // init content obj
                                     index.get(),
                                     contents,
                                     "parsing",
                                     date
                             );
 
-                            bodies.add(String.valueOf(body));
+                            bodies.add(String.valueOf(body)); // add obj to an array
                             contentsOfFile.add(String.valueOf(content));
 
-                            index.getAndIncrement();
+                            index.getAndIncrement(); // increment id and scanId
                             index2.getAndIncrement();
 
                         } catch (IOException e) {
@@ -67,11 +67,11 @@ public class FileReader {
                         }
                     });
         }
-       IO.println(serializer.saveArrays(bodies,contentsOfFile));
+       IO.println(serializer.saveArrays(bodies,contentsOfFile)); // save array into relevant dir in JSON format
 
     }
 
-    public static String getFileExtension(Path path)
+    public static String getFileExtension(Path path)// get file extension like ".txt"
     {
         String filename = path.getFileName().toString();
         int dot = filename.lastIndexOf('.');
@@ -81,7 +81,7 @@ public class FileReader {
                 : "";
     }
 
-    private static String sha256(Path path)
+    private static String sha256(Path path) // get file hash
             throws IOException, NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
