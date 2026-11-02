@@ -26,8 +26,10 @@ public class JsonSerializer {
 
             Path resultsDir = dirForm.createResultsDir(); // create result dir see format in Output/DirectoryFormatter
 
-            String jsonBody = mapper.writeValueAsString(body);// Serialize obj to json
-            String jsonContent = mapper.writeValueAsString(content); //same
+            String jsonBody = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(body);// Serialize obj to json
+            String jsonContent = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(content); //same
 
             Path outputFileBody = resultsDir.resolve("body.json"); // get path to body.json
             Path outputFileContent = resultsDir.resolve("content.json"); // same for content.json
