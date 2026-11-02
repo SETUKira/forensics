@@ -1,6 +1,6 @@
+import Serializer.JsonSerializer;
 import model.Bodies;
 import model.Content;
-import service.ReadResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ public class FileReader {
     public static void readTextFiles(String directory) throws IOException {
         List<String> bodies = new ArrayList<>();
         List<String> contentsOfFile = new ArrayList<>();
-
+        JsonSerializer serializer = new JsonSerializer();
         AtomicInteger index = new AtomicInteger(); // id
         AtomicInteger index2 = new AtomicInteger(1); // scanId
         DateTimeFormatter formatter =
@@ -56,6 +56,7 @@ public class FileReader {
 
                             bodies.add(String.valueOf(body));
                             contentsOfFile.add(String.valueOf(content));
+
                             index.getAndIncrement();
                             index2.getAndIncrement();
 
@@ -66,7 +67,8 @@ public class FileReader {
                         }
                     });
         }
-        ReadResult result = new ReadResult(bodies,contentsOfFile);
+       IO.println(serializer.saveArrays(bodies,contentsOfFile));
+
     }
 
     public static String getFileExtension(Path path)
