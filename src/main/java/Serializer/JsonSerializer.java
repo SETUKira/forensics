@@ -1,4 +1,6 @@
 package Serializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import model.*;
 
 
@@ -14,7 +16,8 @@ import java.nio.file.StandardOpenOption;
 
 public class JsonSerializer {
     ObjectMapper mapper = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT); // init JSON serializer + pretty print
+            .enable(SerializationFeature.INDENT_OUTPUT) // init JSON serializer + pretty print
+            .disable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
 
     public String saveArrays (Path resultsDir,Bodies body, Content content) throws IOException // Serialize arraylist into JSON and put results into generated folder
     {
@@ -22,29 +25,27 @@ public class JsonSerializer {
             return "failed to save";
         }
 
-            String jsonBody = mapper.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(body);// Serialize obj to json
-            String jsonContent = mapper.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(content); //same
-
-            Path outputFileBody = resultsDir.resolve("body.json"); // get path to body.json
-            Path outputFileContent = resultsDir.resolve("content.json"); // same for content.json
-
-        Files.writeString( // write file  body.json
-                outputFileBody,
-                jsonBody,
-                StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE_NEW
-        );
-        Files.writeString( // write file content.json
-                outputFileContent,
-                jsonContent,
-                StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE_NEW
-        );
-
+        appendToJsonArray(resultsDir.resolve("body.json"),body);
+        appendToJsonArray(resultsDir.resolve("content.json"),content);
             return "saved successfully";
+    }
+    private void appendToJsonArray(Path file, Object value) throws IOException {
+        ArrayNode array;
 
+        if (Files.exists(file) && Files.size(file) > 0) {
+            JsonNode existing = mapper.readTree(file.toFile());
 
+            if (!existing.isArray()) {
+                throw new IOException("expected: " + file);
+            }
+
+            array = (ArrayNode) existing;
+        } else {
+            array = mapper.createArrayNode();
+        }
+
+        array.add(mapper.valueToTree(value));
+
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file.toFile(), array);
     }
 }

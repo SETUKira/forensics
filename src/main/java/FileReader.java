@@ -49,6 +49,7 @@ public class FileReader {
                                     Files.size(path),  // it's size in bytes
                                     sha256(path) // get files hash
                             );
+                            IO.println(body);
 
                             Content content = new Content( // init content obj
                                     index.get(),
@@ -56,6 +57,7 @@ public class FileReader {
                                     "parsing",
                                     date
                             );
+                            IO.println(content);
                             IO.println(serializer.saveArrays(resultsDir,body,content)); // save array into relevant dir in JSON format
 
                             index.getAndIncrement(); // increment id and scanId
