@@ -1,3 +1,4 @@
+import Output.DirectoryFormatter;
 import Serializer.JsonSerializer;
 import model.Bodies;
 import model.Content;
@@ -26,9 +27,11 @@ public class FileReader {
         AtomicInteger index2 = new AtomicInteger(1); // scanId
         DateTimeFormatter formatter =
                 DateTimeFormatter.ofPattern("yyyy-MM-dd, HH-mm-ss");
+        DirectoryFormatter dirForm = new DirectoryFormatter(); // init dir formatter
 
 
         try (Stream<Path> files = Files.list(Path.of(directory))) { // get list of files in directory
+            Path resultsDir = dirForm.createResultsDir(); // create result dir see format in Output/DirectoryFormatter
             files.filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".txt")) // filter only /.txt files
                     .forEach(path -> {
@@ -53,9 +56,7 @@ public class FileReader {
                                     "parsing",
                                     date
                             );
-
-                            bodies.add(String.valueOf(body)); // add obj to an array
-                            contentsOfFile.add(String.valueOf(content));
+                            IO.println(serializer.saveArrays(resultsDir,body,content)); // save array into relevant dir in JSON format
 
                             index.getAndIncrement(); // increment id and scanId
                             index2.getAndIncrement();
@@ -67,7 +68,6 @@ public class FileReader {
                         }
                     });
         }
-       IO.println(serializer.saveArrays(bodies,contentsOfFile)); // save array into relevant dir in JSON format
 
     }
 
