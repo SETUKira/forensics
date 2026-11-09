@@ -1,0 +1,26 @@
+[ {
+  "id" : 0,
+  "extractedTxt" : "WASSSSAP NIGUS WIGUS\n",
+  "extractionMethod" : "parsing",
+  "processedAt" : "2026-11-09, 13-18-38"
+}, {
+  "id" : 1,
+  "extractedTxt" : "6 7",
+  "extractionMethod" : "parsing",
+  "processedAt" : "2026-11-09, 13-18-38"
+}, {
+  "id" : 2,
+  "extractedTxt" : "i don't have testicals",
+  "extractionMethod" : "parsing",
+  "processedAt" : "2026-11-09, 13-18-38"
+}, {
+  "id" : 3,
+  "extractedTxt" : "i <3 my gf",
+  "extractionMethod" : "parsing",
+  "processedAt" : "2026-11-09, 13-18-38"
+}, {
+  "id" : 4,
+  "extractedTxt" : "sup world",
+  "extractionMethod" : "parsing",
+  "processedAt" : "2026-11-09, 13-18-38"
+} ]

@@ -15,6 +15,9 @@ import java.util.HexFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
 public class FileReader {
 
     public static void readTextFiles(String directory) throws IOException {
@@ -27,34 +30,38 @@ public class FileReader {
 
 
         try (Stream<Path> files = Files.list(Path.of(directory))) { // get list of files in directory
+
             Path resultsDir = dirForm.createResultsDir(); // create result dir see format in Output/DirectoryFormatter
             files.filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(".txt")) // filter only /.txt files
+                    .filter(path -> path.toString().endsWith(".txt") || path.toString().endsWith(".docx")) // filter only /.txt files
                     .forEach(path -> {
                         try {
+                            String date = LocalDateTime.now().format(formatter);
+                            switch(getFileExtension(path))
+                            {
+                                case "docx": {
+                                    InputStream iS = Files.newInputStream(path);
+                                    XWPFDocument document = new XWPFDocument(iS);
+                                    XWPFWordExtractor wordExtractor = new XWPFWordExtractor(document);
+                                    String contentsDocX = wordExtractor.getText();
+                                    IO.println(serializer.saveArrays(resultsDir,
+                                            createBody(index, index2, path),
+                                            createContent(index, contentsDocX, "parsing", date)));
+                                    // save array into relevant dir in JSON format
+                                }
+                                    break;
 
-                            String contents = Files.readString(path).strip(); // read contents of each file
-                            String date = LocalDateTime.now().format(formatter); // get current date and time
+                                case "txt": {
+                                    String contentsTxT = Files.readString(path).strip();
+                                    IO.println(serializer.saveArrays(resultsDir,
+                                            createBody(index, index2, path),
+                                            createContent(index, contentsTxT, "parsing", date)));
+                                }
+                                    break;
 
-                            Bodies body = new Bodies(
-                                    index.get(), // id
-                                    index2.get(), // scanId
-                                    path.getFileName().toString(), // filename
-                                    getFileExtension(path), // .txt
-                                    path.toString(), // path to file
-                                    Files.size(path),  // it's size in bytes
-                                    sha256(path) // get files hash
-                            );
-
-                            Content content = new Content( // init content obj
-                                    index.get(),
-                                    contents,
-                                    "parsing",
-                                    date
-                            );
-
-                            IO.println(serializer.saveArrays(resultsDir,body,content)); // save array into relevant dir in JSON format
-
+                                default:
+                                    break;
+                            }
                             index.getAndIncrement(); // increment id and scanId
                             index2.getAndIncrement();
 
@@ -68,6 +75,27 @@ public class FileReader {
 
     }
 
+
+    public static Bodies createBody(AtomicInteger index, AtomicInteger index2, Path path) throws IOException, NoSuchAlgorithmException {
+        return new Bodies(
+                index.get(), // id
+                index2.get(), // scanId
+                path.getFileName().toString(), // filename
+                getFileExtension(path), // .txt
+                path.toString(), // path to file
+                Files.size(path),  // it's size in bytes
+                sha256(path) // get files hash
+        );
+    }
+    public static Content createContent (AtomicInteger index, String contents, String method, String date)
+    {
+        return new Content( // init content obj
+                index.get(),
+                contents,
+                method,
+                date
+        );
+    }
     public static String getFileExtension(Path path)// get file extension like ".txt"
     {
         String filename = path.getFileName().toString();

@@ -8,7 +8,7 @@ void main() throws IOException {
 }
 
 public void app() throws IOException {
-    IO.println("Enter Path: ");
+    IO.println("Enter Path: "); // /Users/setu20117306/Desktop/testicals
     String path = sc.nextLine();
     FileReader.readTextFiles(path);
 

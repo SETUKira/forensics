@@ -1,0 +1,41 @@
+[ {
+  "id" : 0,
+  "scanId" : 1,
+  "filename" : "test.docx",
+  "extension" : "docx",
+  "path" : "/Users/setu20117306/Desktop/testicals/test.docx",
+  "fileSize" : 13352,
+  "fileHash" : "9054a742fff5be25640142981b7f037402d2a624584fc9821d373c37eab282c2"
+}, {
+  "id" : 1,
+  "scanId" : 2,
+  "filename" : "txt4.txt",
+  "extension" : "txt",
+  "path" : "/Users/setu20117306/Desktop/testicals/txt4.txt",
+  "fileSize" : 4,
+  "fileHash" : "92beac052e1a608a885c3feb21893dd2d45b1ff351f121dc84e6080bbc8db309"
+}, {
+  "id" : 2,
+  "scanId" : 3,
+  "filename" : "txt2.txt",
+  "extension" : "txt",
+  "path" : "/Users/setu20117306/Desktop/testicals/txt2.txt",
+  "fileSize" : 23,
+  "fileHash" : "6c33b3260c8c34e095c320de142bc970aba37a53b7389495daafbed229ae430b"
+}, {
+  "id" : 3,
+  "scanId" : 4,
+  "filename" : "txt3.txt",
+  "extension" : "txt",
+  "path" : "/Users/setu20117306/Desktop/testicals/txt3.txt",
+  "fileSize" : 11,
+  "fileHash" : "e65dbad9b505981cd6968c4bf5c7ccbc3848f7f0bb8b8752e7e3aa985f24ea49"
+}, {
+  "id" : 4,
+  "scanId" : 5,
+  "filename" : "txt1.txt",
+  "extension" : "txt",
+  "path" : "/Users/setu20117306/Desktop/testicals/txt1.txt",
+  "fileSize" : 10,
+  "fileHash" : "a6b553fa381b229b95ce295576d65bb1267f1cf41cd313f5544ab7923a3ec981"
+} ]
